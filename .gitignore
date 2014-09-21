@@ -8,6 +8,7 @@
 
 # Build results
 [Dd]ebug/
+[Dd]ebug.win32/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/

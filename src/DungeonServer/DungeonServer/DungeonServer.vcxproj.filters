@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{002996bc-5f49-4034-9846-d804baed220a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{3cfbe6f1-5834-4652-a3f4-358ccb895128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{25fda20e-051c-4cae-8314-1442428c9b70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\SQLite3">
+      <UniqueIdentifier>{70ad0489-0679-4018-996a-e52df58bf401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientSesson">
+      <UniqueIdentifier>{865be354-2194-4758-a5da-11c0edd5431f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientSesson\ClientManager">
+      <UniqueIdentifier>{aeeeab05-30bd-485f-9dac-2736719274ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dungeons">
+      <UniqueIdentifier>{b410be8e-09b6-4ec6-bbe3-25acda92e2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{366d4872-f403-4037-ac6f-c93c062eb23d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Monster">
+      <UniqueIdentifier>{fcc7e6de-65c5-41e6-ba1d-0a3e4ee3fb65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Player">
+      <UniqueIdentifier>{bddefc5b-d648-4603-ad45-79ab443d8c30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\CharacterManager">
+      <UniqueIdentifier>{2c73b222-6172-4fd9-b074-2f7944f39341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dungeons\Wave">
+      <UniqueIdentifier>{d6b042d2-2326-48b2-886a-172995902ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Place">
+      <UniqueIdentifier>{e84106ff-243f-4b10-852f-f6e17b3402cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Place\Map">
+      <UniqueIdentifier>{4b839cfe-c2f1-4b6c-8151-b803b61d2612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dungeons\Wave\WaveManager">
+      <UniqueIdentifier>{c425edc2-9687-4599-b491-0d2c9f23edc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{c67e7744-0122-4616-b6ec-22e486d35e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dungeons\DungeonMaster">
+      <UniqueIdentifier>{af4569f1-e1c9-450b-b4bb-adeacd1f2611}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{e0f43f4e-39ac-4dac-bff8-1f7224281ef4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\PacketType.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularBuffer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DbHelper.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPool.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ProducerConsumerQueue.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseJobContext.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseJobManager.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLStatement.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="RefCountable.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadLocal.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3ext.h">
+      <Filter>Utils\SQLite3</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Utils\SQLite3</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonServer.h" />
+    <ClInclude Include="Config.h">
+      <Filter>ClientSesson</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientManager.h">
+      <Filter>ClientSesson\ClientManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession.h">
+      <Filter>ClientSesson</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventListener.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventParameter.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterManager.h">
+      <Filter>Character\CharacterManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Character\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Place.h">
+      <Filter>Place</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonMaster.h">
+      <Filter>Dungeons\DungeonMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Dungeon.h">
+      <Filter>Dungeons</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CircularBuffer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DbHelper.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketHandling.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseJobContext.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseJobManager.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadLocal.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Utils\SQLite3</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonServer.cpp" />
+    <ClCompile Include="ClientManager.cpp">
+      <Filter>ClientSesson\ClientManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession.cpp">
+      <Filter>ClientSesson</Filter>
+    </ClCompile>
+    <ClCompile Include="EventListener.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterManager.cpp">
+      <Filter>Character\CharacterManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Character\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Place.cpp">
+      <Filter>Place</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonMaster.cpp">
+      <Filter>Dungeons\DungeonMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Dungeon.cpp">
+      <Filter>Dungeons</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
