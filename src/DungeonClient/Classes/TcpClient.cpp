@@ -4,7 +4,8 @@
 #include "base/CCDirector.h"
 #include "base/CCScheduler.h"
 #include "2d/CCLabel.h"
-#include "HelloWorldScene.h"
+#include "LoginScene.h"
+#include "SignUpLayer.h"
 #include "../../PacketType.h"
 
 
@@ -171,13 +172,24 @@ void TcpClient::processPacket()
 			{
 				LoginResult recvData;
 				bool ret = m_recvBuffer.Read((char*)&recvData, recvData.mSize);
-				assert(ret && recvData.mPlayerId != -1);
-				CCLOG("LOGIN OK: ID[%d] Name[%s] POS[%.4f, %.4f]", recvData.mPlayerId, recvData.mName, recvData.mPosX, recvData.mPosY);
-	
-				m_loginId = recvData.mPlayerId;
+
+				auto layer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(std::string("login_scene_layer"));
+				if (layer != nullptr)
+					scheduler->performFunctionInCocosThread(CC_CALLBACK_0(LoginScene::onLoginResult, dynamic_cast<LoginScene*>(layer), recvData));
 			}
 			break;
 
+		case PKT_SC_SIGNUP:
+		{
+			SignUpRequest recvData;
+			bool ret = m_recvBuffer.Read((char*)&recvData, recvData.mSize);
+
+			auto layer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(std::string("sign_up_layer"));
+			if (layer != nullptr)
+				scheduler->performFunctionInCocosThread(CC_CALLBACK_0(SignUpLayer::onSignUpResult, dynamic_cast<SignUpLayer*>(layer), recvData));
+			
+		}break;
+			/*
 		case PKT_SC_CHAT:
 			{
 				ChatBroadcastResult recvData;
@@ -206,25 +218,20 @@ void TcpClient::processPacket()
 
 		default:
 			assert(false);
-		}
+		*/}
 
 	}
 }
 
-void TcpClient::loginRequest()
+void TcpClient::loginRequest(char* id, char* pw)
 {
-	if (m_loginId > 0)
-		return;
-
-	srand(time(NULL));
-
-	/// 대략 아래의 id로 로그인 테스트..
 	LoginRequest sendData;
-	sendData.mPlayerId = 1000 + rand() % 101;
+	strcpy(sendData.mID, id);
+	strcpy(sendData.mPassword, pw);
 
 	send((const char*)&sendData, sizeof(LoginRequest));
-
 }
+
 
 void TcpClient::chatRequest(const char* chat)
 {
@@ -251,4 +258,14 @@ void TcpClient::moveRequest(float x, float y)
 	sendData.mPosY = y;
 
 	send((const char*)&sendData, sizeof(MoveRequest));
+}
+
+void TcpClient::signUpRequest(char* id, char* pw, wchar_t* name)
+{
+	SignUpRequest sendData;
+	strcpy(sendData.mID, id);
+	strcpy(sendData.mPassword, pw);
+	wcscpy(sendData.mName, name);
+
+	send((const char*)&sendData, sizeof(SignUpRequest));
 }

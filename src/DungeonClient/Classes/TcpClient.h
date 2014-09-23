@@ -21,7 +21,8 @@ public:
 	
 
 	/// request test 
-	void loginRequest();
+	void loginRequest(char* id, char* pw);
+	void signUpRequest(char* id, char* pw, wchar_t* name);
 	void chatRequest(const char* chat);
 	void moveRequest(float x, float y);
 

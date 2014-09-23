@@ -8,12 +8,16 @@
 #define MAX_ID_LEN 15
 #define MAX_PW_LEN 15
 
+typedef	int CharacterID;
+
 enum PacketTypes
 {
 	PKT_NONE	= 0,
 	
 	PKT_CS_LOGIN = 1,
 	PKT_SC_LOGIN = 2,
+	PKT_CS_SIGNUP = 12,
+	PKT_SC_SIGNUP = 13, 
 	
 	PKT_SC_ENTER_PLACE = 3,
 	PKT_CS_LOAD_PLACE = 4,
@@ -28,7 +32,7 @@ enum PacketTypes
 	PKT_SC_CHAT = 11,
 
 
-	PKT_MAX	= 1024
+	PKT_MAX	= 14
 } ;
 
 enum PlaceType
@@ -49,7 +53,7 @@ struct CharacterInfo
 	CharacterInfo()
 	{
 		mType = CT_NONE;
-		mX = mY = INFINITE;
+		mX = mY = 0.f;
 		memset(mName, 0, sizeof(mName));
 	}
 	CharacterType	mType;
@@ -78,7 +82,7 @@ struct LoginRequest : public PacketHeader
 		memset(mID, 0, sizeof(mID));
 		memset(mPassword, 0, sizeof(mPassword));
 	}
-	char mID			[MAX_ID_LEN];
+	char mID			[MAX_ID_LEN]; 
 	char mPassword[MAX_PW_LEN];
 } ;
 
@@ -86,12 +90,55 @@ struct LoginResult : public PacketHeader
 {
 	LoginResult()
 	{
-		mSize = sizeof(LoginResult) ;
-		mType = PKT_SC_LOGIN ;
-		mSucceed = false;
+		mSize = sizeof(LoginResult);
+		mType = PKT_SC_LOGIN;
+		mCharacterID = -1;
+		mResultType = LRT_SUCCEED;
 	}
-	bool mSucceed;
+	enum LoginResultTypes{
+		LRT_SUCCEED = 0,
+		LRT_WRONG_PW = 1,
+		LRT_NOT_REGIESTERED_ID = 2,
+		LRT_WRONG_VALUE = 3,
+	};
+	short mResultType;
+	CharacterID mCharacterID;
 } ;
+
+
+struct SignUpRequest : public PacketHeader
+{
+	SignUpRequest()
+	{
+		mSize = sizeof(SignUpRequest);
+		mType = PKT_CS_SIGNUP;
+		memset(mID, 0, sizeof(mID));
+		memset(mPassword, 0, sizeof(mPassword));
+		memset(mName, 0, sizeof(mName));
+	}
+	char mID[MAX_ID_LEN];
+	char mPassword[MAX_PW_LEN];
+	wchar_t mName[MAX_NAME_LEN];
+};
+
+struct SignUpResult : public PacketHeader
+{
+	SignUpResult()
+	{
+		mSize = sizeof(SignUpResult);
+		mType = PKT_SC_SIGNUP;
+		bool mSucceed = false;
+		short mErrorType = ET_NONE;
+	}
+	enum ErrorType{
+		ET_NONE = 0,
+		ET_DupplicatedID = 1,
+		ET_DupplicatedName = 2,
+		ET_WRONG_VALUE = 3
+	};
+	bool mSucced;
+	short mErrorType;
+};
 
 struct EnterPlaceResult : public PacketHeader
 {

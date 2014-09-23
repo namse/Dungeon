@@ -39,6 +39,12 @@
     <ClCompile Include="..\Classes\EventListener.cpp">
       <Filter>Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\LoginScene.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SignUpLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -70,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Event.h">
       <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\LoginScene.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SignUpLayer.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

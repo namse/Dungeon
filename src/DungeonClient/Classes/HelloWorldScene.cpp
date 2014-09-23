@@ -116,7 +116,7 @@ void HelloWorld::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 		break;
 
 	case cocos2d::EventKeyboard::KeyCode::KEY_L: ///< LOGIN
-		TcpClient::getInstance()->loginRequest();
+		//TcpClient::getInstance()->loginRequest();
 		break;
 
 	case cocos2d::EventKeyboard::KeyCode::KEY_C: ///< CHAT
