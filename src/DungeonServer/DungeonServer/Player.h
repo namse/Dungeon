@@ -4,6 +4,6 @@ class Player :
 	public Character
 {
 public:
-	Player();
+	Player(CharacterID id, PlayerLoadingInfo info);
 	virtual ~Player();
 };

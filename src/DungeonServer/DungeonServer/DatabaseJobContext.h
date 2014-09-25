@@ -19,9 +19,7 @@ struct DatabaseJobContext
 
 	virtual bool OnExecute() = 0 ;
 
-	void SetSuccess(bool success) { mSuccess = success ; }
-
-	SOCKET	mSockKey ;
+	SOCKET	mSockKey;
 	bool	mSuccess ;
 } ;
 
@@ -29,77 +27,47 @@ struct DatabaseJobContext
 /// player load 작업
 struct LoadPlayerDataContext : public DatabaseJobContext, public ObjectPool<LoadPlayerDataContext>
 {
-	LoadPlayerDataContext(SOCKET socketKey, int playerId) : DatabaseJobContext(socketKey)
-		, mPlayerId(playerId), mPosX(0), mPosY(0), mPosZ(0)
+	LoadPlayerDataContext(SOCKET socketKey, const char* playerId, const char* playerPW) : DatabaseJobContext(socketKey)
 	{
-		memset(mPlayerName, 0, sizeof(mPlayerName)) ;
+		memcpy(mPlayerId, playerId, sizeof(mPlayerId));
+		memcpy(mPlayerPassword, playerPW, sizeof(mPlayerPassword));
+		mResultType = LRT_SUCCEED;
+		mIndex = -1;
 	}
 
 
 	virtual bool OnExecute() ;
 
 
-	int		mPlayerId ;
+	char	mPlayerId[MAX_ID_LEN];
+	char	mPlayerPassword[MAX_PW_LEN];
 
-	///참고: 현재 DB에서는 xyz좌표를 double로 쓰고 있지만, 게임에서는 float로 xy만 쓰고 있음
-	double	mPosX ;
-	double	mPosY ;
-	double	mPosZ ; 
-	char	mPlayerName[MAX_NAME_LEN] ;
-
+	LoginResultTypes mResultType;
+	PlayerIndexForDB mIndex;
+	PlayerLoadingInfo mInfo;
 } ;
 
 
 /// Player 생성 작업
 struct CreatePlayerDataContext : public DatabaseJobContext, public ObjectPool<CreatePlayerDataContext>
 {
-	CreatePlayerDataContext() 
-		: mPlayerId(-1), mPosX(0), mPosY(0), mPosZ(0)
+	CreatePlayerDataContext(SOCKET socketKey, const char* id, const char* pw, const wchar_t* name)
+		: DatabaseJobContext(socketKey)
 	{
-		memset(mPlayerName, 0, sizeof(mPlayerName)) ;
-		memset(mComment, 0, sizeof(mComment)) ;
+		memcpy(mPlayerID, id, sizeof(mPlayerID));
+		memcpy(mPlayerPW, pw, sizeof(mPlayerPW));
+		memcpy(mPlayerName, name, sizeof(mPlayerName));
+		mReusltType = SRT_SUCCEED;
 	}
 
 	virtual bool OnExecute() ;
 
-	int		mPlayerId ;
+	char		mPlayerID[MAX_ID_LEN];
+	char		mPlayerPW[MAX_PW_LEN];
+	wchar_t	mPlayerName[MAX_NAME_LEN] ;
 
-	double	mPosX ;
-	double	mPosY ;
-	double	mPosZ ;
-	char	mPlayerName[MAX_NAME_LEN] ;
-	char	mComment[MAX_COMMENT_LEN] ;
-} ;
-
-
-
-/// Player 삭제 작업
-struct DeletePlayerDataContext : public DatabaseJobContext, public ObjectPool<DeletePlayerDataContext>
-{
-	DeletePlayerDataContext(int playerId) : mPlayerId(playerId)
-	{}
-
-	virtual bool OnExecute() ;
-
-	int		mPlayerId ;
+	SignUpResultType mReusltType;
 
 } ;
 
-/// Player 업데이트 작업
-struct UpdatePlayerDataContext : public DatabaseJobContext, public ObjectPool<UpdatePlayerDataContext>
-{
-	UpdatePlayerDataContext(SOCKET socketKey, int playerId) : DatabaseJobContext(socketKey)
-		, mPlayerId(playerId), mPosX(0), mPosY(0), mPosZ(0)
-	{
-		memset(mComment, 0, sizeof(mComment)) ;
-	}
 
-	virtual bool OnExecute() ;
-
-	int		mPlayerId ;
-
-	double	mPosX ;
-	double	mPosY ;
-	double	mPosZ ;
-	char	mComment[MAX_COMMENT_LEN] ;
-} ;

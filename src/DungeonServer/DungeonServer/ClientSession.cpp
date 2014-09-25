@@ -5,6 +5,7 @@
 #include "ClientManager.h"
 #include "DatabaseJobContext.h"
 #include "DatabaseJobManager.h"
+#include "CharacterManager.h"
 
 
 bool ClientSession::OnConnect(SOCKADDR_IN* addr)
@@ -164,12 +165,13 @@ void ClientSession::OnDbUpdate()
 	if (!IsConnected())
 		return;
 
-	UpdatePlayerDataContext* updatePlayer = new UpdatePlayerDataContext(mSocket, mPlayerId) ;
-	 
+	/*UpdatePlayerDataContext* updatePlayer = new UpdatePlayerDataContext(mSocket, mPlayerId) ;
+	 / *
 	updatePlayer->mPosX = mPosX ;
-	updatePlayer->mPosY = mPosY ;
+	updatePlayer->mPosY = mPosY ;* /
 	strcpy_s(updatePlayer->mComment, "updated_test") ; ///< 일단은 테스트를 위한 코멘트
 	GDatabaseJobManager->PushDatabaseJobRequest(updatePlayer) ;
+*/
 
 	CallFuncAfter(PLAYER_DB_UPDATE_INTERVAL, this, &ClientSession::OnDbUpdate);
 
@@ -187,12 +189,18 @@ void ClientSession::DatabaseJobDone(DatabaseJobContext* result)
 	{
 		LoadPlayerDataContext* login = dynamic_cast<LoadPlayerDataContext*>(result) ;
 
-		LoginDone(login->mPlayerId, (float)login->mPosX, (float)login->mPosY, login->mPlayerName) ;
-	
+		LoginDone(login);
 	}
-	else if ( typeInfo == typeid(UpdatePlayerDataContext) )
+	/*else if ( typeInfo == typeid(UpdatePlayerDataContext) )
 	{
 		UpdateDone() ;
+	}*/
+
+	else if (typeInfo == typeid(CreatePlayerDataContext))
+	{
+		CreatePlayerDataContext* ctx = dynamic_cast<CreatePlayerDataContext*>(result);
+
+		SignUpDone(ctx->mSuccess, ctx->mReusltType);
 	}
 	else
 	{
@@ -209,25 +217,65 @@ void ClientSession::UpdateDone()
 
 
 
-void ClientSession::LoginDone(int pid, float x, float y, const char* name)
+void ClientSession::LoginDone(LoadPlayerDataContext* ctx)
 {
 	LoginResult outPacket ;
 
-	outPacket.mPlayerId = mPlayerId = pid ;
-	outPacket.mPosX = mPosX = x ;
-	outPacket.mPosY = mPosY = y ;
-	strcpy_s(mPlayerName, name) ;
-	strcpy_s(outPacket.mName, name) ;
+	outPacket.mResultType = ctx->mResultType;
 
-	SendRequest(&outPacket) ;
+	switch (ctx->mResultType)
+	{
+	case LRT_SUCCEED:
+	{
 
-	mLogon = true ;
+		//TODO Make New Player
+		mPlayerId = CharacterManager::GetInstance()->NewPlayer(ctx->mInfo);
+		//TODO Get Character ID
+		outPacket.mInfo.mMyCharacterID = mPlayerId;
+		SendRequest(&outPacket);
 
-	/// heartbeat gogo
-	OnTick();
+		mLogon = true;
 
-	/// first db update gogo
-	OnDbUpdate();
+		/// heartbeat gogo
+		OnTick();
+
+		/// first db update gogo
+		OnDbUpdate();
+	}break;
+	case LRT_WRONG_PW:
+	case LRT_NOT_REGIESTERED_ID:
+	case LRT_WRONG_VALUE:
+	{
+		SendRequest(&outPacket);
+	}break;
+	default:
+		break;
+	}
+
+
+}
+
+
+void ClientSession::SignUpDone(bool isSuccess, SignUpResultType resultType)
+{
+	if (isSuccess)
+	{
+		SignUpResult outPacket;
+
+		outPacket.mSucced = true;
+		outPacket.mErrorType = resultType;
+
+		SendRequest(&outPacket);
+	}
+	else
+	{
+		SignUpResult outPacket;
+
+		outPacket.mSucced = false;
+		outPacket.mErrorType = resultType;
+
+		SendRequest(&outPacket);
+	}
 }
 
 

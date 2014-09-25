@@ -2,8 +2,10 @@
 #include "Player.h"
 
 
-Player::Player()
+Player::Player(CharacterID id, PlayerLoadingInfo info)
+	:Character(id)
 {
+	wcscpy(mName, info.mName);
 }
 
 

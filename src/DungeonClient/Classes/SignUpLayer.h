@@ -13,6 +13,7 @@ USING_NS_CC_EXT;
 class SignUpLayer : public cocos2d::LayerColor, public EditBoxDelegate
 {
 public:
+	static const std::string layerName;
 
 	// Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
 	virtual bool init();
@@ -24,7 +25,7 @@ public:
 	virtual void editBoxEditingDidBegin(EditBox* editBox) {};
 	virtual void editBoxEditingDidEnd(EditBox* editBox);
 	virtual void editBoxTextChanged(EditBox* editBox, const std::string& text) {};
-	virtual void editBoxReturn(EditBox* editBox) = 0;
+	virtual void editBoxReturn(EditBox* editBox) {};
 private:
 	void onMenuItemClicked(Ref* sender);
 	

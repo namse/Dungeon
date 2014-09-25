@@ -4,7 +4,7 @@ class Monster :
 	public Character
 {
 private:
-	Monster();
+	Monster(CharacterID id);
 	virtual ~Monster();
 	
 };

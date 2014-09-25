@@ -1,7 +1,7 @@
 #pragma once
 
-const char* SQL_InsertTest = "INSERT INTO players VALUES(?, ?, ?, ?, ?, ?)" ;
-const char* SQL_SelectTest = "SELECT name, pos_x, pos_y, pos_z FROM players WHERE pid=?" ;
-const char* SQL_UpdateTest = "UPDATE players SET pos_x=?, pos_y=?, pos_z=?, comment=? WHERE pid=?" ;
-const char* SQL_DeleteTest = "DELETE FROM players WHERE pid=?" ;
-
+const char* SQL_LoginRequest = "SELECT idx FROM players WHERE id=? AND password=?";
+const char* SQL_GetPlayerInfo = "SELECT name FROM players WHERE idx=?";
+const char* SQL_SignUpRequest = "INSERT INTO players (id, password, name) VALUES (?, ?, ?)";
+const char* SQL_IsIDRegisteredRequest = "SELECT COUNT(*) FROM players WHERE id=?";
+const char* SQL_IsNameRegisteredRequest = "SELECT COUNT(*) FROM players WHERE name=?";

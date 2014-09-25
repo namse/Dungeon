@@ -3,6 +3,8 @@
 #include "TcpClient.h"
 #include "../../PacketType.h"
 
+const std::string LoginScene::layerName = std::string( "login_layer");
+
 Scene* LoginScene::createScene()
 {
 	// 'scene' is an autorelease object
@@ -12,8 +14,11 @@ Scene* LoginScene::createScene()
 	auto layer = LoginScene::create();
 
 	// add layer as a child to scene
-	scene->addChild(layer, 1, std::string("login_scene_layer"));
+	scene->addChild(layer, 1, std::string(LoginScene::layerName));
 
+	auto signUpLayer = SignUpLayer::create();
+	scene->addChild(signUpLayer, 2, std::string(SignUpLayer::layerName));
+	signUpLayer->setVisible(false);
 	// return the scene
 	return scene;
 }
@@ -35,9 +40,6 @@ bool LoginScene::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	mSignUpLayer = SignUpLayer::create();
-	addChild(mSignUpLayer, 1, std::string("sign_up_layer"));
-	mSignUpLayer->setVisible(false);
 
 
 	// ID TextField Init
@@ -128,9 +130,14 @@ void LoginScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 	{
 		mIsCapslockOn = !mIsCapslockOn;
 	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_ENTER)
+	else if (keyCode == EventKeyboard::KeyCode::KEY_KP_ENTER)
 	{
-		onMenuItemPressed(mLoginButtonItem);
+		if (mFocusStatus == FS_ID)
+		{
+			switchFocus(FS_PW);
+		}
+		else if ( mFocusStatus == FS_PW)
+			onMenuItemPressed(mLoginButtonItem);
 	}
 
 
@@ -399,9 +406,8 @@ void LoginScene::onMenuItemPressed(Ref* sender)
 {
 	if (sender == mLoginButtonItem)
 	{
+		tryLogin();
 		switchFocus(FS_NONE);
-		WCHAR buf[1024] = L"";
-		TcpClient::getInstance()->loginRequest(mID, mPassword);
 	}
 	else if (sender == mIDItem)
 	{
@@ -466,13 +472,26 @@ void LoginScene::onLoginResult(LoginResult inPacket)
 	case LRT_WRONG_PW:
 	{
 		MessageBox("비밀번호가 틀렸습니다", "잘못된 비밀번호");
-		SetFocus(FS_PW);
+		switchFocus(FS_PW);
 	}break;
 	case LRT_NOT_REGIESTERED_ID:
 	{
-		mSignUpLayer->setVisible(true);
+		auto signUpLayer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(SignUpLayer::layerName);
+
+		if (signUpLayer != nullptr)
+			signUpLayer->setVisible(true);
 	}break;
+	case LRT_WRONG_VALUE:
+	{
+		MessageBox("이상한 값이 입력되었습니다.\n입력하신 내용을 다시 확인해주세요.", "잘못된 값 입력");
+		switchFocus(FS_ID);
+	}
 	default:
 		break;
 	}
+}
+
+void LoginScene::tryLogin()
+{
+	TcpClient::getInstance()->loginRequest(mID, mPassword);
 }

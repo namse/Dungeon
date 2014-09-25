@@ -18,6 +18,7 @@ class LoginScene : public cocos2d::LayerColor
 	}	mFocusStatus;
 
 public:
+	static const std::string layerName;
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
 	static cocos2d::Scene* createScene();
 
@@ -35,6 +36,7 @@ public:
 	char* getID(){ return mID; }
 	char* getPW(){ return mPassword; }
 
+	void tryLogin();
 private:
 
 	void update(float dTime);
@@ -44,8 +46,7 @@ private:
 	{
 		return mIsShiftPressed & mIsCapslockOn;
 	}
-
-	SignUpLayer* mSignUpLayer = nullptr;
+	
 
 	MenuItemFont* mIDItem = nullptr;
 	MenuItemFont* mPWItem = nullptr;

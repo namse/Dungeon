@@ -173,7 +173,7 @@ void TcpClient::processPacket()
 				LoginResult recvData;
 				bool ret = m_recvBuffer.Read((char*)&recvData, recvData.mSize);
 
-				auto layer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(std::string("login_scene_layer"));
+				auto layer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(LoginScene::layerName);
 				if (layer != nullptr)
 					scheduler->performFunctionInCocosThread(CC_CALLBACK_0(LoginScene::onLoginResult, dynamic_cast<LoginScene*>(layer), recvData));
 			}
@@ -181,10 +181,10 @@ void TcpClient::processPacket()
 
 		case PKT_SC_SIGNUP:
 		{
-			SignUpRequest recvData;
+			SignUpResult recvData;
 			bool ret = m_recvBuffer.Read((char*)&recvData, recvData.mSize);
 
-			auto layer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(std::string("sign_up_layer"));
+			auto layer = cocos2d::Director::getInstance()->getRunningScene()->getChildByName(SignUpLayer::layerName);
 			if (layer != nullptr)
 				scheduler->performFunctionInCocosThread(CC_CALLBACK_0(SignUpLayer::onSignUpResult, dynamic_cast<SignUpLayer*>(layer), recvData));
 			
@@ -263,9 +263,10 @@ void TcpClient::moveRequest(float x, float y)
 void TcpClient::signUpRequest(char* id, char* pw, wchar_t* name)
 {
 	SignUpRequest sendData;
-	strcpy(sendData.mID, id);
-	strcpy(sendData.mPassword, pw);
-	wcscpy(sendData.mName, name);
+	strcpy_s(sendData.mID, MAX_ID_LEN, id);
+	strcpy_s(sendData.mPassword, MAX_PW_LEN, pw);
+	wcscpy_s(sendData.mName, MAX_NAME_LEN, name);
 
 	send((const char*)&sendData, sizeof(SignUpRequest));
+
 }

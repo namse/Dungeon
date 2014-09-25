@@ -30,6 +30,8 @@ public:
 	// only use on character's constructor
 	void AddCharacter(Character* character);
 
+
+	CharacterID	NewPlayer(PlayerLoadingInfo info);
 private:
 	CharacterManager();
 	~CharacterManager();

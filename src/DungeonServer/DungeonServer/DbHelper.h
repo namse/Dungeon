@@ -34,16 +34,20 @@ public:
 	double GetResultParamDouble() ;
 	const unsigned char* GetResultParamText() ;
 
+	int GetResultColCount() { return mResultColCount; }
+	RESULT_TYPE GetResult() {	return mResult; }
 
 private:
 
 	static sqlite3* mSqlite ;
 
 	/// 현재 수행중인 SQL문에 대한 정보
-	sqlite3_stmt*	mResult ;
+	sqlite3_stmt*	mStmt ;
 	int				mResultColCount ;
 
 	int				mBindColCount ;
 	int				mResultCurrentCol ;
+
+	RESULT_TYPE mResult;
 
 } ;

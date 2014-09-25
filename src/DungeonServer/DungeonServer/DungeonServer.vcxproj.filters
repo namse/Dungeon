@@ -55,6 +55,9 @@
     <Filter Include="Event">
       <UniqueIdentifier>{e0f43f4e-39ac-4dac-bff8-1f7224281ef4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{515f2dcd-5854-49fb-9fb2-e2c27fbb61ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -69,29 +72,11 @@
     <ClInclude Include="Exception.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="DbHelper.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectPool.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="ProducerConsumerQueue.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="DatabaseJobContext.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="DatabaseJobManager.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLStatement.h">
-      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="RefCountable.h">
       <Filter>Utils</Filter>
@@ -108,7 +93,6 @@
     <ClInclude Include="sqlite3.h">
       <Filter>Utils\SQLite3</Filter>
     </ClInclude>
-    <ClInclude Include="DungeonServer.h" />
     <ClInclude Include="Config.h">
       <Filter>ClientSesson</Filter>
     </ClInclude>
@@ -154,6 +138,27 @@
     <ClInclude Include="Dungeon.h">
       <Filter>Dungeons</Filter>
     </ClInclude>
+    <ClInclude Include="SQLStatement.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseJobContext.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseJobManager.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonServer.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DbHelper.h">
+      <Filter>DB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CircularBuffer.cpp">
@@ -162,20 +167,8 @@
     <ClCompile Include="Exception.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="DbHelper.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="PacketHandling.cpp">
       <Filter>Packet</Filter>
-    </ClCompile>
-    <ClCompile Include="DatabaseJobContext.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="DatabaseJobManager.cpp">
-      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Scheduler.cpp">
       <Filter>Utils</Filter>
@@ -186,7 +179,6 @@
     <ClCompile Include="sqlite3.c">
       <Filter>Utils\SQLite3</Filter>
     </ClCompile>
-    <ClCompile Include="DungeonServer.cpp" />
     <ClCompile Include="ClientManager.cpp">
       <Filter>ClientSesson\ClientManager</Filter>
     </ClCompile>
@@ -222,6 +214,21 @@
     </ClCompile>
     <ClCompile Include="Dungeon.cpp">
       <Filter>Dungeons</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseJobContext.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseJobManager.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonServer.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DbHelper.cpp">
+      <Filter>DB</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

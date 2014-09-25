@@ -128,13 +128,77 @@ REGISTER_HANDLER(PKT_CS_LOGIN)
 		return;
 	}
 
-	LoadPlayerDataContext* newDbJob = new LoadPlayerDataContext(session->GetSocketKey(), inPacket.mPlayerId);
-	GDatabaseJobManager->PushDatabaseJobRequest(newDbJob);
+	bool isWrong = false;
+	// Check is ID And PW Data OK
+	{
+		// 1. check length
+		auto idLength = strnlen_s(inPacket.mID, MAX_ID_LEN);
+		auto pwLength = strnlen_s(inPacket.mPassword, MAX_PW_LEN);
+		if (idLength <= 0 || idLength > MAX_ID_LEN || pwLength <= 0 || pwLength > MAX_PW_LEN)
+		{
+			isWrong = true;
+		}
+		else
+		{
+			// 2. Check is value right
+			for (char ch : inPacket.mID)
+			{
+				if (ch == NULL) break;
 
+				if ((ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z') && (ch < '0' || ch > '9'))
+				{
+					isWrong = true;
+					break;
+				}
+			}
+
+			for (char ch : inPacket.mPassword)
+			{
+				if (ch == NULL) break;
+
+				if ((ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z') && (ch < '0' || ch > '9')
+					&& (ch != '`') && (ch != '~') && (ch != '!') && (ch != '@') && (ch != '#') 
+					&& (ch != '$') && (ch != '%') && (ch != '^') && (ch != '&') && (ch != '*') 
+					&& (ch != '(') && (ch != ')') && (ch != '-') && (ch != '=') && (ch != '_') 
+					&& (ch != '+') && (ch != '[') && (ch != ']') && (ch != '\\') &&(ch != '{') 
+					&&(ch != '}') &&(ch != ' | ') &&(ch != '; ') &&(ch != '\'') && (ch != '"') 
+					&& (ch != ',') && (ch != '.') && (ch != '/') && (ch != '<') && (ch != '>') && (ch != '?'))
+				{
+					isWrong = true;
+					break;
+				}
+			}
+		}
+	}
+
+	if (isWrong == false)
+	{
+		LoadPlayerDataContext* newDbJob = new LoadPlayerDataContext(session->GetSocketKey(), inPacket.mID, inPacket.mPassword);
+		GDatabaseJobManager->PushDatabaseJobRequest(newDbJob);
+	}
+	else
+	{
+		LoginResult	outPacket;
+		outPacket.mResultType = LRT_WRONG_VALUE;
+		session->SendRequest(&outPacket);
+	}
+}
+REGISTER_HANDLER(PKT_CS_SIGNUP)
+{
+	SignUpRequest inPacket;
+	if (false == session->ParsePacket(inPacket))
+	{
+		printf("[DEBUG] packet parsing error", inPacket.mType);
+		return;
+	}
+
+	CreatePlayerDataContext* newDbJob = new CreatePlayerDataContext(session->GetSocketKey(), inPacket.mID, inPacket.mPassword, inPacket.mName);
+	GDatabaseJobManager->PushDatabaseJobRequest(newDbJob);
 }
 
 REGISTER_HANDLER(PKT_CS_CHAT)
 {
+/*
 	ChatBroadcastRequest inPacket;
 	if (false == session->ParsePacket(inPacket))
 	{
@@ -159,12 +223,13 @@ REGISTER_HANDLER(PKT_CS_CHAT)
 	if (!session->Broadcast(&outPacket))
 	{
 		session->Disconnect();
-	}
+	}*/
 }
 
 
 REGISTER_HANDLER(PKT_CS_MOVE)
 {
+/*
 	MoveRequest inPacket;
 	if (false == session->ParsePacket(inPacket))
 	{
@@ -190,6 +255,7 @@ REGISTER_HANDLER(PKT_CS_MOVE)
 	{
 		session->Disconnect();
 	}
+*/
 
 }
 

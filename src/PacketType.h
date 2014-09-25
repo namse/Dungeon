@@ -61,7 +61,27 @@ struct CharacterInfo
 	CharacterID		mID;
 	wchar_t			mName[MAX_NAME_LEN];
 };
+struct LoginResultInfo
+{
+	LoginResultInfo()
+	{
+		mMyCharacterID = -1;
+	};
 
+	CharacterID	mMyCharacterID;
+};
+enum LoginResultTypes{
+	LRT_SUCCEED = 0,
+	LRT_WRONG_PW = 1,
+	LRT_NOT_REGIESTERED_ID = 2,
+	LRT_WRONG_VALUE = 3,
+};
+enum SignUpResultType{
+	SRT_SUCCEED = 0,
+	SRT_DupplicatedID = 1,
+	SRT_DupplicatedName = 2,
+	SRT_WRONG_VALUE = 3
+};
 #pragma pack(push, 1)
 
 struct PacketHeader
@@ -92,17 +112,11 @@ struct LoginResult : public PacketHeader
 	{
 		mSize = sizeof(LoginResult);
 		mType = PKT_SC_LOGIN;
-		mCharacterID = -1;
 		mResultType = LRT_SUCCEED;
 	}
-	enum LoginResultTypes{
-		LRT_SUCCEED = 0,
-		LRT_WRONG_PW = 1,
-		LRT_NOT_REGIESTERED_ID = 2,
-		LRT_WRONG_VALUE = 3,
-	};
-	short mResultType;
-	CharacterID mCharacterID;
+
+	short mResultType; 
+	LoginResultInfo mInfo;
 } ;
 
 
@@ -128,14 +142,8 @@ struct SignUpResult : public PacketHeader
 		mSize = sizeof(SignUpResult);
 		mType = PKT_SC_SIGNUP;
 		bool mSucceed = false;
-		short mErrorType = ET_NONE;
+		short mErrorType = SRT_SUCCEED;
 	}
-	enum ErrorType{
-		ET_NONE = 0,
-		ET_DupplicatedID = 1,
-		ET_DupplicatedName = 2,
-		ET_WRONG_VALUE = 3
-	};
 	bool mSucced;
 	short mErrorType;
 };

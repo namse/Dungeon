@@ -5,11 +5,12 @@ class Character
 {
 	friend	class CharacterManager;
 public:
-	Character();
+	Character(CharacterID id);
 	virtual ~Character() = NULL;
 
 
-private:
-	CharacterID mID;
+protected:
+	CharacterID		mID;
+	wchar_t			mName[MAX_NAME_LEN];
 };
 

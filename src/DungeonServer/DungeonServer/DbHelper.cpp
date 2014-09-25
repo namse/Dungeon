@@ -7,11 +7,11 @@ sqlite3* DbHelper::mSqlite = NULL ;
 
 
 DbHelper::DbHelper(const char* sql) 
-	: mResult(NULL), mResultColCount(0), mBindColCount(0), mResultCurrentCol(0)
+	: mStmt(NULL), mResultColCount(0), mBindColCount(0), mResultCurrentCol(0)
 {
 	char* errMsg = NULL ;
 
-	if ( sqlite3_prepare_v2(mSqlite, sql, -1, &mResult, NULL) != SQLITE_OK )
+	if ( sqlite3_prepare_v2(mSqlite, sql, -1, &mStmt, NULL) != SQLITE_OK )
 	{
 		printf("DbHelper Query [%s] Prepare failed: %s\n", sql, sqlite3_errmsg(mSqlite)) ;
 		CRASH_ASSERT(false) ;
@@ -20,7 +20,7 @@ DbHelper::DbHelper(const char* sql)
 
 DbHelper::~DbHelper()
 {
-	sqlite3_finalize(mResult) ;
+	sqlite3_finalize(mStmt) ;
 }
 
 bool DbHelper::Initialize(const char* connInfoStr)
@@ -78,7 +78,7 @@ bool DbHelper::Execute(const char* format, ...)
 bool DbHelper::BindParamInt(int param)
 {
 
-	if ( sqlite3_bind_int(mResult, ++mBindColCount, param) != SQLITE_OK )
+	if ( sqlite3_bind_int(mStmt, ++mBindColCount, param) != SQLITE_OK )
 	{
 		printf("DbHelper Bind Int failed: %s\n", sqlite3_errmsg(mSqlite)) ;
 		return false ;
@@ -89,7 +89,7 @@ bool DbHelper::BindParamInt(int param)
 
 bool DbHelper::BindParamDouble(double param)
 {
-	if ( sqlite3_bind_double(mResult, ++mBindColCount, param) != SQLITE_OK )
+	if ( sqlite3_bind_double(mStmt, ++mBindColCount, param) != SQLITE_OK )
 	{
 		printf("DbHelper Bind Double failed: %s\n", sqlite3_errmsg(mSqlite)) ;
 		return false ;
@@ -100,7 +100,7 @@ bool DbHelper::BindParamDouble(double param)
 
 bool DbHelper::BindParamText(const char* text, int count)
 {
-	if ( sqlite3_bind_text(mResult, ++mBindColCount, text, strlen(text), NULL) != SQLITE_OK )
+	if ( sqlite3_bind_text(mStmt, ++mBindColCount, text, count, NULL) != SQLITE_OK )
 	{
 		printf("DbHelper Bind Text failed: %s\n", sqlite3_errmsg(mSqlite)) ;
 		return false ;
@@ -111,40 +111,40 @@ bool DbHelper::BindParamText(const char* text, int count)
 
 RESULT_TYPE DbHelper::FetchRow()
 {
-	int result = sqlite3_step(mResult) ;
+	int result = sqlite3_step(mStmt) ;
 	if ( result != SQLITE_ROW && result != SQLITE_DONE )
 	{
 		printf("DbHelper FetchRow failed: %s\n", sqlite3_errmsg(mSqlite)) ;
-		return RESULT_ERROR ;
+		return mResult = RESULT_ERROR ;
 	}
 
 	/// 결과셋으로 얻어올 데이터가 없다. (그냥 쿼리 실행만 된 것)
 	if ( result == SQLITE_DONE )
-		return RESULT_DONE ;
+		return mResult = RESULT_DONE;
 
-	mResultColCount = sqlite3_column_count(mResult) ;
+	mResultColCount = sqlite3_column_count(mStmt) ;
 	mResultCurrentCol = 0 ;
 
-	return RESULT_ROW ;
+	return mResult =RESULT_ROW;
 }
 
 int DbHelper::GetResultParamInt()
 {
 	CRASH_ASSERT( mResultCurrentCol < mResultColCount ) ;
 	
-	return sqlite3_column_int(mResult, mResultCurrentCol++) ;
+	return sqlite3_column_int(mStmt, mResultCurrentCol++) ;
 }
 
 double DbHelper::GetResultParamDouble()
 {
 	CRASH_ASSERT( mResultCurrentCol < mResultColCount ) ;
 
-	return sqlite3_column_double(mResult, mResultCurrentCol++) ;
+	return sqlite3_column_double(mStmt, mResultCurrentCol++) ;
 }
 
 const unsigned char* DbHelper::GetResultParamText()
 {
 	CRASH_ASSERT( mResultCurrentCol < mResultColCount ) ;
 	
-	return sqlite3_column_text(mResult, mResultCurrentCol++) ;
+	return sqlite3_column_text(mStmt, mResultCurrentCol++) ;
 }

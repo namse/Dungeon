@@ -7,67 +7,112 @@
 
 bool LoadPlayerDataContext::OnExecute()
 {
-	DbHelper dbhelper(SQL_SelectTest) ;
-	dbhelper.BindParamInt(mPlayerId) ;
+	DbHelper dbhelper(SQL_LoginRequest) ;
+	dbhelper.BindParamText(mPlayerId, strlen(mPlayerId)) ;
+	dbhelper.BindParamText(mPlayerPassword, strlen(mPlayerPassword));
 
 	/// 데이터가 없네?
-	if ( RESULT_ROW != dbhelper.FetchRow() )
-		return false ;
+	if (dbhelper.FetchRow() == RESULT_DONE)
+	{
+		// TODO
+		//확인작업 해야함. 아이디가 틀린건지 비번이 틀린건지 등등
+		DbHelper wrongPwChecker(SQL_IsIDRegisteredRequest);
+		wrongPwChecker.BindParamText(mPlayerId, strlen(mPlayerId));
+		if (RESULT_ROW != wrongPwChecker.FetchRow())
+		{
+			assert(false);
+			return false;
+		}
+		int idCount = wrongPwChecker.GetResultParamInt();
+		if (idCount == 0)
+		{
+			mResultType = LRT_NOT_REGIESTERED_ID;
+			return true;
+		}
+		else
+		{
+			mResultType = LRT_WRONG_PW;
+			return true;
+		}
+	}
+	else if (dbhelper.GetResultColCount() == 1)
+	{
+		mIndex = dbhelper.GetResultParamInt();
 
+		//필요한 데이터 끌어오자
+		DbHelper infoLoader(SQL_GetPlayerInfo);
+		infoLoader.BindParamInt(mIndex);
 
-	const unsigned char* name = dbhelper.GetResultParamText() ;
-	mPosX = dbhelper.GetResultParamDouble() ;
-	mPosY = dbhelper.GetResultParamDouble() ;
-	mPosZ = dbhelper.GetResultParamDouble() ;
-
-	strcpy_s(mPlayerName, (char*)name) ;
-
-
-	return true ;
+		if (RESULT_ROW != infoLoader.FetchRow())
+		{
+			// 문제 있다냥;;
+			assert(false);
+			return false;
+		}
+		else
+		{
+			MultiByteToWideChar(CP_UTF8, 0, (LPSTR)infoLoader.GetResultParamText(), -1, mInfo.mName, MAX_NAME_LEN);
+			mResultType = LRT_SUCCEED;
+			return true;
+		}
+	}
+	else
+	{
+		assert(false);
+		return false;
+	}
 }
 
 bool CreatePlayerDataContext::OnExecute()
 {
-	DbHelper dbhelper(SQL_InsertTest) ;
 
-	dbhelper.BindParamInt(mPlayerId) ;
-	dbhelper.BindParamText(mPlayerName, strlen(mPlayerName)) ;
-	dbhelper.BindParamDouble(mPosX) ;
-	dbhelper.BindParamDouble(mPosY) ;
-	dbhelper.BindParamDouble(mPosZ) ;
-	dbhelper.BindParamText(mComment, strlen(mComment)) ;
+	DbHelper checkDupplicatedIDHelper(SQL_IsIDRegisteredRequest);
 
-	if ( RESULT_ERROR == dbhelper.FetchRow() )
-		return false ;
+	checkDupplicatedIDHelper.BindParamText(mPlayerID, strlen(mPlayerID));
+	if (checkDupplicatedIDHelper.FetchRow() == RESULT_ERROR)
+	{
+		assert(false);
+		return false;
+	}
+	if (checkDupplicatedIDHelper.GetResultParamInt() == 0)
+	{
+		DbHelper checkDupplicatedNameHelper(SQL_IsNameRegisteredRequest);
 
-	return true ;
-}
+		char nameBuf[1024] = "";
+		WideCharToMultiByte(CP_UTF8, 0, mPlayerName, -1, nameBuf, sizeof(nameBuf), NULL, NULL);
+		checkDupplicatedNameHelper.BindParamText(nameBuf, strlen(nameBuf));
 
-bool DeletePlayerDataContext::OnExecute()
-{
-	DbHelper dbhelper(SQL_DeleteTest) ;
-	dbhelper.BindParamInt(mPlayerId) ;
-
-	if ( RESULT_ERROR == dbhelper.FetchRow() )
-		return false ;
-
-	return true ;
-
-}
-
-bool UpdatePlayerDataContext::OnExecute()
-{
-	DbHelper dbhelper(SQL_UpdateTest) ;
-
-	dbhelper.BindParamDouble(mPosX) ;
-	dbhelper.BindParamDouble(mPosY) ;
-	dbhelper.BindParamDouble(mPosZ) ;
-	dbhelper.BindParamText(mComment, strlen(mComment)) ;
-	dbhelper.BindParamInt(mPlayerId) ;
-
-	if ( RESULT_ERROR == dbhelper.FetchRow() )
-		return false ;
-
-	return true ;
-
+		if (checkDupplicatedNameHelper.FetchRow() == RESULT_ERROR)
+		{
+			assert(false);
+			return false;
+		}
+		if (checkDupplicatedNameHelper.GetResultParamInt() == 0)
+		{
+			DbHelper signUpHelper(SQL_SignUpRequest);
+			signUpHelper.BindParamText(mPlayerID, strlen(mPlayerID));
+			signUpHelper.BindParamText(mPlayerPW, strlen(mPlayerPW));
+			signUpHelper.BindParamText(nameBuf, strlen(nameBuf));
+			if (RESULT_ERROR == signUpHelper.FetchRow())
+			{
+				assert(false);
+				return false;
+			}
+			else
+			{
+				mReusltType = SRT_SUCCEED;
+				return true;
+			}
+		}
+		else
+		{
+			mReusltType = SRT_DupplicatedName;
+			return true;
+		}
+	}
+	else
+	{
+		mReusltType = SRT_DupplicatedID;
+		return true;
+	}
 }

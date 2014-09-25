@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Monster.h"
 
-Monster::Monster()
+Monster::Monster(CharacterID id)
+	:Character(id)
 {
 
 }
